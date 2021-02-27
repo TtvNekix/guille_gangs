@@ -134,17 +134,17 @@ AddEventHandler('guille_gangs:sendlog', function(type, var, var2)
     print(gang)
     print(var)
     if type == 'cardel' then
-        sendToDiscord(Config.Webhook, "Car delete", "**User: **"..name.."\n"..identifier.. "\n**Car:** ".. var .. "\n**Gang: **" .. gang .. "", 65280)
+        sendToDiscord(Configw.Webhook, "Car delete", "**User: **"..name.."\n"..identifier.. "\n**Car:** ".. var .. "\n**Gang: **" .. gang .. "", 65280)
     elseif type == 'society' then
-        sendToDiscord(Config.Webhook, "Society menu opened", "**User: **"..name.."\n"..identifier.. "\n**Gang:** ".. var .. "", 65280)
+        sendToDiscord(Configw.Webhook, "Society menu opened", "**User: **"..name.."\n"..identifier.. "\n**Gang:** ".. var .. "", 65280)
     elseif type == 'carspawn' then
-        sendToDiscord(Config.Webhook, "Car spawned", "**User: **"..name.."\n"..identifier.. "\n**Car:** ".. var .. "\n**Gang: **" .. gang .. "", 65280)
+        sendToDiscord(Configw.Webhook, "Car spawned", "**User: **"..name.."\n"..identifier.. "\n**Car:** ".. var .. "\n**Gang: **" .. gang .. "", 65280)
     elseif type == 'gangmsg' then
-        sendToDiscord(Config.Webhook, "Message to a gang", "**User: **"..name.."\n"..identifier.. "\n**Gang: ** ".. var .. "\n**Message: **" .. var2 .. "", 65280)
+        sendToDiscord(Configw.Webhook, "Message to a gang", "**User: **"..name.."\n"..identifier.. "\n**Gang: ** ".. var .. "\n**Message: **" .. var2 .. "", 65280)
     elseif type == 'stock' then
-        sendToDiscord(Config.Webhook, "Stock menu", "**User: **"..name.."\n"..identifier.. "\n**Gang: ** ".. gang .. "\n**Stock menu opened**", 65280)
+        sendToDiscord(Configw.Webhook, "Stock menu", "**User: **"..name.."\n"..identifier.. "\n**Gang: ** ".. gang .. "\n**Stock menu opened**", 65280)
     elseif type == 'weapons' then
-        sendToDiscord(Config.Webhook, "Stock menu", "**User: **"..name.."\n"..identifier.. "\n**Gang: ** ".. gang .. "\n**Weapons menu opened**", 65280)
+        sendToDiscord(Configw.Webhook, "Stock menu", "**User: **"..name.."\n"..identifier.. "\n**Gang: ** ".. gang .. "\n**Weapons menu opened**", 65280)
     end
 end)
 
