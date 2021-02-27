@@ -15,6 +15,7 @@ client_scripts {
 server_scripts {
     "@mysql-async/lib/MySQL.lua",
     "config.lua",
+    "webhook.lua",
     "server/server.lua",
 
 }
