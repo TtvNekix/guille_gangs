@@ -17,6 +17,5 @@ server_scripts {
     "config.lua",
     "webhook.lua",
     "server/server.lua",
-
 }
 
