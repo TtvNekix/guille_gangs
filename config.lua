@@ -6,8 +6,6 @@ Config.LeaderRank = "boss" -- Rank of the gang leader
 
 Config.MoneyWash = false -- Enable to the gangs wash money
 
-Config.Webhook = "https://discord.com/api/webhooks/814915888536748082/Y213_3JxVhKqPIZ09HgZjT2SvFdEOt2RYChe2GYB6VDIeH7SPOSNEiboDYW7spbjpxnQ" -- Your Discord webhook
-
 Config.Gangs = {
 
     Ballas = {
