@@ -99,7 +99,7 @@ Citizen.CreateThread(function()
                         local model = GetEntityModel(vehicle)
                         local carname = GetDisplayNameFromVehicleModel(model)
                         local text = GetLabelText(carname)
-                        if IsPedInAnyVehicle(ped, true) then 
+                        if IsPedInAnyVehicle(GetPlayerPed(-1), true) then 
                             --print(text)
                             if text == "NULL" then
                                 --print("1")
