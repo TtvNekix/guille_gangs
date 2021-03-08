@@ -249,10 +249,23 @@ RegisterCommand('seemissions', function(source, args)
     end)
 end)
 
+
+function isgang(job)
+    for k, v in pairs(Config.Gangs) do
+        --print(v.Job)
+       if (v.Job == job) then 
+        return true
+       end
+    end 
+    --print("--------------------------------------")
+    return false
+end
+
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        if IsControlJustPressed(1, 167) then
+        Job = PlayerData.job.name
+        if IsControlJustPressed(1, 167) and isgang(Job) then
             local elements = {}
             table.insert(elements, { label = "Handcuff", value = "handcuff" })
             table.insert(elements, { label = "See licenses", value = "licenses" })
