@@ -94,7 +94,7 @@ Citizen.CreateThread(function()
                     ESX.ShowHelpNotification(v.notification)
 
                     if IsControlJustPressed(1,38) then
-                        local vehicle = GetVehiclePedIsIn(ped)
+                        local vehicle = GetVehiclePedIsIn(ped, false)
                         local hash = GetHashKey(vehicle)
                         local model = GetEntityModel(vehicle)
                         local carname = GetDisplayNameFromVehicleModel(model)
