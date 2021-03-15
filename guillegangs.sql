@@ -8,13 +8,6 @@ INSERT INTO `jobs` (name, label, whitelisted) VALUES
 	('mafia', 'Mafia', 1)
 ;
 
-INSERT INTO `addon_inventory_items` (inventory_name, name, count) VALUES
-	('society_families', 'bread', 0),
-	('society_vagos', 'bread', 0), 
-	('society_ballas', 'bread', 0), 
-	('society_thelost', 'bread', 0), 
-	('society_mafia', 'bread', 0)
-;
 
 INSERT INTO `addon_account` (name, label, shared) VALUES
 	('society_families', 'families', 1),
