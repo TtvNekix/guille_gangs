@@ -161,7 +161,7 @@ ESX.RegisterServerCallback('guille_gangs:getStockItems', function(source, cb)
     xPlayer = ESX.GetPlayerFromId(source)
     local gang = xPlayer.job.name
 
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_' .. gang .. '', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_' .. gang, function(inventory)
         cb(inventory.items)
 	end)
 
