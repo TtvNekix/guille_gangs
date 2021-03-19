@@ -264,6 +264,9 @@ end
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
+	while PlayerData.job.name == nil do
+		Citizen.Wait(1)
+	end
         Job = PlayerData.job.name
         if IsControlJustPressed(1, 167) and isgang(Job) then
             local elements = {}
