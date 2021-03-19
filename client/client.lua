@@ -266,41 +266,50 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
         
         if IsControlJustPressed(1, 167) then
-	    local job = ESX.PlayerData.job.name
-	    if isgang(job) then
-		    local elements = {}
-		    table.insert(elements, { label = "Handcuff", value = "handcuff" })
-		    table.insert(elements, { label = "See licenses", value = "licenses" })
-		    table.insert(elements, { label = "Escort", value = "escort" })
-		    table.insert(elements, { label = "Put inside the vehicle", value = "vehiclein" })
-		    table.insert(elements, { label = "Get out from the vehicle", value = "vehicleout" })
+            if isgang(ESX.PlayerData.job.name) then
+                local elements = {}
+                table.insert(elements, { label = "Handcuff", value = "handcuff" })
+                table.insert(elements, { label = "See licenses", value = "licenses" })
+                table.insert(elements, { label = "Escort", value = "escort" })
+                table.insert(elements, { label = "Put inside the vehicle", value = "vehiclein" })
+                table.insert(elements, { label = "Get out from the vehicle", value = "vehicleout" })
 
-		    ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'get_missions', {
-			title = ('' .. PlayerData.job.name .. ' actions'),
-			align = 'top-right',
-			elements = elements
-		    }, function(data, menu)
-			local v = data.current.value
-			local player, distance = ESX.Game.GetClosestPlayer()
-			if v == 'handcuff' then
-
-			    TriggerServerEvent('guille_gangs:handcuff', GetPlayerServerId(player))
-			elseif v == "vehiclein" then
-			    TriggerServerEvent('guille_gangs:putinvehicle', GetPlayerServerId(nearplayer))
-			elseif v == "vehicleout" then
-			    TriggerServerEvent('guille_gangs:outfromveh', GetPlayerServerId(nearplayer))
-			elseif v == "escort" then
-			    TriggerServerEvent('guille_gangs:escort', GetPlayerServerId(nearplayer))
-			elseif v == "licenses" then
-			    OpenIdentityCardMenu(player)
-			end
-		    end, function(data, menu)
-			menu.close()
-		    end)
-		end
+                ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'get_missions', {
+                title = ('' .. PlayerData.job.name .. ' actions'),
+                align = 'top-right',
+                elements = elements
+                }, function(data, menu)
+                local v = data.current.value
+                local player, distance = ESX.Game.GetClosestPlayer()
+                if v == 'handcuff' then
+                    if distance < 3 then
+                        TriggerServerEvent('guille_gangs:handcuff', GetPlayerServerId(player))
+                    end
+                elseif v == "vehiclein" then
+                    if distance < 3 then
+                        TriggerServerEvent('guille_gangs:putinvehicle', GetPlayerServerId(nearplayer))
+                    end
+                elseif v == "vehicleout" then
+                    if distance < 3 then
+                        TriggerServerEvent('guille_gangs:outfromveh', GetPlayerServerId(nearplayer))
+                    end
+                elseif v == "escort" then
+                    if distance < 3 then
+                        TriggerServerEvent('guille_gangs:escort', GetPlayerServerId(nearplayer))
+                    end
+                elseif v == "licenses" then
+                    if distance < 3 then
+                        OpenIdentityCardMenu(player)
+                    end
+                end
+                end, function(data, menu)
+                menu.close()
+                end)
+            end
         end
     end
 end)
+
 
 RegisterNetEvent('guille_gans:outfromv')
 AddEventHandler('guille_gans:outfromv', function(target)
