@@ -265,8 +265,8 @@ Citizen.CreateThread(function()
     Citizen.Wait(30000)
     while true do
         Citizen.Wait(0)
-        Job = PlayerData.job.name
-        if IsControlJustPressed(1, 167) and isgang(Job) then
+        job = ESX.PlayerData.job.name
+        if IsControlJustPressed(1, 167) and isgang(job) then
             local elements = {}
             table.insert(elements, { label = "Handcuff", value = "handcuff" })
             table.insert(elements, { label = "See licenses", value = "licenses" })
