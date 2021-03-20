@@ -266,11 +266,13 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
         
         if IsControlJustPressed(1, 167) then
-            if isgang(ESX.PlayerData.job.name) then
+            if isgang(PlayerData.job.name) then
                 local elements = {}
                 table.insert(elements, { label = "Handcuff", value = "handcuff" })
+                table.insert(elements, { label = "UnHandcuff", value = "unarrest" })
                 table.insert(elements, { label = "See licenses", value = "licenses" })
                 table.insert(elements, { label = "Escort", value = "escort" })
+                table.insert(elements, { label = "Search", value = "search" })
                 table.insert(elements, { label = "Put inside the vehicle", value = "vehiclein" })
                 table.insert(elements, { label = "Get out from the vehicle", value = "vehicleout" })
 
@@ -282,20 +284,41 @@ Citizen.CreateThread(function()
                 local v = data.current.value
                 local player, distance = ESX.Game.GetClosestPlayer()
                 if v == 'handcuff' then
+                    local playerheading = GetEntityHeading(GetPlayerPed(-1))
+                    local playerlocation = GetEntityForwardVector(PlayerPedId())
+                    local playerCoords = GetEntityCoords(GetPlayerPed(-1))
                     if distance < 3 then
-                        TriggerServerEvent('guille_gangs:handcuff', GetPlayerServerId(player))
+                        TriggerServerEvent('esx_policejob:requestarrest', GetPlayerServerId(player), playerheading, playerCoords, playerlocation)
+                    end
+                elseif v == 'unarrest' then
+                    local target, distance = ESX.Game.GetClosestPlayer()
+                    playerheading = GetEntityHeading(GetPlayerPed(-1))
+                    playerlocation = GetEntityForwardVector(PlayerPedId())
+                    playerCoords = GetEntityCoords(GetPlayerPed(-1))
+                    local target_id = GetPlayerServerId(target)
+                    if distance <= 2.0 then
+                    TriggerServerEvent('esx_policejob:requestrelease', target_id, playerheading, playerCoords, playerlocation)
+                    else
+                        ESX.ShowNotification('No estás lo suficientemente cerca')
+                    end
+                elseif v == 'search' then
+                    print("test")
+                    if distance < 3 then
+                        OpenBodySearchMenu(player)
+                    else
+                        ESX.ShowNotification('No players near')
                     end
                 elseif v == "vehiclein" then
                     if distance < 3 then
-                        TriggerServerEvent('guille_gangs:putinvehicle', GetPlayerServerId(nearplayer))
+                        TriggerServerEvent('guille_gangs:putinvehicle', GetPlayerServerId(player))
                     end
                 elseif v == "vehicleout" then
                     if distance < 3 then
-                        TriggerServerEvent('guille_gangs:outfromveh', GetPlayerServerId(nearplayer))
+                        TriggerServerEvent('guille_gangs:outfromveh', GetPlayerServerId(player))
                     end
                 elseif v == "escort" then
                     if distance < 3 then
-                        TriggerServerEvent('guille_gangs:escort', GetPlayerServerId(nearplayer))
+                        TriggerServerEvent('guille_gangs:escort', GetPlayerServerId(player))
                     end
                 elseif v == "licenses" then
                     if distance < 3 then
@@ -309,6 +332,65 @@ Citizen.CreateThread(function()
         end
     end
 end)
+
+
+
+function OpenBodySearchMenu(player)
+    print("test")
+	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
+		local elements = {}
+
+		for i=1, #data.accounts, 1 do
+			if data.accounts[i].name == 'black_money' and data.accounts[i].money > 0 then
+				table.insert(elements, {
+					label    = 'confiscate_dirty', ESX.Math.Round(data.accounts[i].money),
+					value    = 'black_money',
+					itemType = 'item_account',
+					amount   = data.accounts[i].money
+				})
+
+				break
+			end
+		end
+
+		table.insert(elements, {label = ('guns_label')})
+
+		for i=1, #data.weapons, 1 do
+			table.insert(elements, {
+				label    = 'confiscate_weapon', ESX.GetWeaponLabel(data.weapons[i].name), data.weapons[i].ammo,
+				value    = data.weapons[i].name,
+				itemType = 'item_weapon',
+				amount   = data.weapons[i].ammo
+			})
+		end
+
+		table.insert(elements, {label = ('inventory_label')})
+
+		for i=1, #data.inventory, 1 do
+			if data.inventory[i].count > 0 then
+				table.insert(elements, {
+					label    = 'confiscate_inv', data.inventory[i].count, data.inventory[i].label,
+					value    = data.inventory[i].name,
+					itemType = 'item_standard',
+					amount   = data.inventory[i].count
+				})
+			end
+		end
+
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'body_search', {
+			title    = ('search'),
+			align    = 'bottom-right',
+			elements = elements
+		}, function(data, menu)
+			if data.current.value then
+				TriggerServerEvent('esx_policejob:confiscatePlayerItem', GetPlayerServerId(player), data.current.itemType, data.current.value, data.current.amount)
+				OpenBodySearchMenu(player)
+			end
+		end, function(data, menu)
+			menu.close()
+		end)
+	end, GetPlayerServerId(player))
+end
 
 
 RegisterNetEvent('guille_gans:outfromv')
@@ -436,7 +518,7 @@ function OpenGetStockMenu()
 
 		for i=1, #items, 1 do
 			table.insert(elements, {
-				label = items[i].label .. ' x' .. items[i].count,
+				label = items[i].name .. ' x' .. items[i].count,
 				type = 'item_standard',
 				value = items[i].name,
 				haveImage = true
