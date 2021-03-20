@@ -340,7 +340,7 @@ AddEventHandler('guille_gangs:outfromveh', function(target)
     if target == 0 then
         TriggerClientEvent('esx:showNotification', source, 'No players nerby')
     else
-        TriggerClientEvent('guille_gangs:outfromv', tar)
+        TriggerClientEvent('esx_policejob:OutVehicle', target)
     end
 end)
 
@@ -361,7 +361,6 @@ AddEventHandler('guille_gangs:escort', function(target)
     if target == 0 then
         TriggerClientEvent('esx:showNotification', source, 'No players nerby')
     else
-        TriggerClientEvent('esx_policejob:darg', target)
+        TriggerClientEvent('esx_policejob:drag', target, source)
     end
 end)
-
