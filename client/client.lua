@@ -353,7 +353,7 @@ function OpenBodySearchMenu(player)
 			end
 		end
 
-		table.insert(elements, {label = ('guns_label')})
+		table.insert(elements, {label = ('Armas')})
 
 		for i=1, #data.weapons, 1 do
 			table.insert(elements, {
@@ -364,7 +364,7 @@ function OpenBodySearchMenu(player)
 			})
 		end
 
-		table.insert(elements, {label = ('inventory_label')})
+		table.insert(elements, {label = ('Inventario')})
 
 		for i=1, #data.inventory, 1 do
 			if data.inventory[i].count > 0 then
