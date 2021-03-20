@@ -343,7 +343,7 @@ function OpenBodySearchMenu(player)
 		for i=1, #data.accounts, 1 do
 			if data.accounts[i].name == 'black_money' and data.accounts[i].money > 0 then
 				table.insert(elements, {
-					label    = 'confiscate_dirty', ESX.Math.Round(data.accounts[i].money),
+					label    = 'Confiscar dinero negro: ', ESX.Math.Round(data.accounts[i].money),
 					value    = 'black_money',
 					itemType = 'item_account',
 					amount   = data.accounts[i].money
@@ -357,7 +357,7 @@ function OpenBodySearchMenu(player)
 
 		for i=1, #data.weapons, 1 do
 			table.insert(elements, {
-				label    = 'confiscate_weapon', ESX.GetWeaponLabel(data.weapons[i].name), data.weapons[i].ammo,
+				label    = 'Confiscar arma: ', ESX.GetWeaponLabel(data.weapons[i].name), data.weapons[i].ammo,
 				value    = data.weapons[i].name,
 				itemType = 'item_weapon',
 				amount   = data.weapons[i].ammo
@@ -369,7 +369,7 @@ function OpenBodySearchMenu(player)
 		for i=1, #data.inventory, 1 do
 			if data.inventory[i].count > 0 then
 				table.insert(elements, {
-					label    = 'confiscate_inv', data.inventory[i].count, data.inventory[i].label,
+					label    = 'Confiscar item: ', data.inventory[i].count, data.inventory[i].label,
 					value    = data.inventory[i].name,
 					itemType = 'item_standard',
 					amount   = data.inventory[i].count
