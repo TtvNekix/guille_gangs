@@ -1,8 +1,6 @@
+-- Guille_Gangs Optimized by VisiBait -> https://github.com/visibait. Original author: guillerp8 -> https://github.com/guillerp8
 
 local PlayerData = {}
-local ped = GetPlayerPed(-1)
-local iped = PlayerPedId(-1)
-local pointscreated = true
 
 ESX = nil
 
@@ -20,7 +18,6 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-	--print("gang")
 	PlayerData.job = job
 	Citizen.Wait(5000)
 end)
@@ -29,37 +26,30 @@ RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	PlayerData = xPlayer
 	PlayerData.job = job
-    --print("gang1")
 end)
 
 Citizen.CreateThread(function()
     while true do
 
-        local wait = 2000
+        Citizen.Wait(0)
+
         local points = {}
-        local cars = {}
         local job
-        --local pedpos = GetEntityCoords(iped)
-        ----print(pedpos)
+        local ped = PlayerPedId()
+        local sleep = true
 
         for _,v in pairs(Config.Gangs) do
             if PlayerData.job ~= nil and PlayerData.job.name == v.Job then
                 job = v.Job
                 points = v.Points
-                ----print("load")
             end
         end
 
         for _,v in pairs(points) do
-            ----print(v.coords.x)
-            ----print(job)
-            local coords = GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), v.coords.x, v.coords.y, v.coords.z, true) 
-            ----print(coords)
+            local coords = GetDistanceBetweenCoords(GetEntityCoords(ped), v.coords.x, v.coords.y, v.coords.z, true) 
             if (coords < 13) then
-                wait = 0
-                ----print(job)
+                sleep = false
                 if PlayerData.job.name == job then
-                    --print("markers")
                     DrawMarker(1, v.coords.x, v.coords.y, v.coords.z-1.24, 0, 0, 0, 0, 0, 0, v.markerbig.a, v.markerbig.b, v.markerbig.c, v.colorm.r, v.colorm.g, v.colorm.b, 200, 0, 0, 0, 0)
                 end
             end
@@ -68,7 +58,6 @@ Citizen.CreateThread(function()
                     if PlayerData.job.grade_name == Config.LeaderRank then
                         ESX.ShowHelpNotification(v.notification)
                         if IsControlJustPressed(1,38) then
-                            ----print(v.recogn))
                             TriggerServerEvent('guille_gangs:societycheck', job)
                         end
                     end
@@ -76,35 +65,29 @@ Citizen.CreateThread(function()
                     ESX.ShowHelpNotification(v.notification)
                     if IsControlJustPressed(1,38) then
                         Weapons()
-                        --print(v.recogn)
                     end
                 elseif v.recogn == "Cars" then
                     ESX.ShowHelpNotification(v.notification)
                     if IsControlJustPressed(1,38) then
                         Cars(v.models.car1, v.models.car2, v.vehiclespawn, v.heading, v.color)
                     end
-                    ----print(v.recogn)
                 elseif v.recogn == "Storage" then
                     ESX.ShowHelpNotification(v.notification)
                     if IsControlJustPressed(1,38) then
                         Storage()
-                        --print(v.recogn)
                     end
                 elseif v.recogn == "Cardelete" then
                     ESX.ShowHelpNotification(v.notification)
 
                     if IsControlJustPressed(1,38) then
-                        local vehicle = GetVehiclePedIsIn(PlayerPedId(-1), false)
-                        local hash = GetHashKey(vehicle)
+                        local vehicle = GetVehiclePedIsIn(ped, false)
                         local model = GetEntityModel(vehicle)
                         local carname = GetDisplayNameFromVehicleModel(model)
                         local text = GetLabelText(carname)
-                        if IsPedInAnyVehicle(GetPlayerPed(-1), true) then 
-                            --print(text)
+                        if IsPedInAnyVehicle(ped, true) then 
                             if text == "NULL" then
-                                --print("1")
                                 if Config.progressBars then
-                                    TaskLeaveVehicle(iped, vehicle, 0)
+                                    TaskLeaveVehicle(ped, vehicle, 0)
                                     FreezeEntityPosition(vehicle, true)
                                     exports['progressBars']:startUI(3000, 'Saving the vehicle into the garage')
                                     Citizen.Wait(3000)
@@ -112,7 +95,7 @@ Citizen.CreateThread(function()
                                     Citizen.Wait(1000)
                                     DeleteVehicle(vehicle)
                                 else
-                                    TaskLeaveVehicle(iped, vehicle, 0)
+                                    TaskLeaveVehicle(ped, vehicle, 0)
                                     Citizen.Wait(2000)
                                     NetworkFadeOutEntity(vehicle, true, true)
                                     Citizen.Wait(1000)
@@ -120,9 +103,8 @@ Citizen.CreateThread(function()
                                 end
                                 ESX.ShowNotification('You deleted a ' .. carname .. '')
                             else
-                                --print("2")
                                 if Config.progressBars then
-                                    TaskLeaveVehicle(iped, vehicle, 0)
+                                    TaskLeaveVehicle(ped, vehicle, 0)
                                     FreezeEntityPosition(vehicle, true)
                                     exports['progressBars']:startUI(3000, 'Saving the vehicle into the garage')
                                     Citizen.Wait(3000)
@@ -130,7 +112,7 @@ Citizen.CreateThread(function()
                                     Citizen.Wait(1100)
                                     DeleteVehicle(vehicle)
                                 else
-                                    TaskLeaveVehicle(iped, vehicle, 0)
+                                    TaskLeaveVehicle(ped, vehicle, 0)
                                     Citizen.Wait(2000)
                                     NetworkFadeOutEntity(vehicle, true, true)
                                     Citizen.Wait(1000)
@@ -146,13 +128,13 @@ Citizen.CreateThread(function()
                 end
             end
         end      
-        Citizen.Wait(wait)
+        if sleep then Citizen.Wait(2000) end
     end
 end)
 
 -- Functions 
 
-function Cars(car1, car2, vehiclespawn, heading, color)
+Cars = function(car1, car2, vehiclespawn, heading, color)
     local elements = {}
 
     table.insert(elements, {label = "" .. car1 .. "", value = "car1" })
@@ -168,7 +150,6 @@ function Cars(car1, car2, vehiclespawn, heading, color)
 		local action = data.current.value
 
         if action == "car1" then
-            --print(table.unpack(color))
             ESX.Game.SpawnVehicle(car1, vector3(vehiclespawn.x, vehiclespawn.y, vehiclespawn.z), heading, function(vehicle)
                 TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
                 SetVehicleCustomPrimaryColour(vehicle, table.unpack(color))
@@ -178,7 +159,6 @@ function Cars(car1, car2, vehiclespawn, heading, color)
             end)
         end
         if action == "car2" then
-            --print(table.unpack(color))
             ESX.Game.SpawnVehicle(car2, vector3(vehiclespawn.x, vehiclespawn.y, vehiclespawn.z), heading, function(vehicle)
                 TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
                 SetVehicleCustomPrimaryColour(vehicle, table.unpack(color))
@@ -250,93 +230,86 @@ RegisterCommand('seemissions', function(source, args)
 end)
 
 
-function isgang(job)
-    for k, v in pairs(Config.Gangs) do
-        --print(v.Job)
+isgang = function(job)
+    for k, v in pairs(Config.Gangs) do 
        if (v.Job == job) then 
         return true
        end
     end 
-    --print("--------------------------------------")
     return false
 end
 
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-        
-        if IsControlJustPressed(1, 167) then
-            if isgang(PlayerData.job.name) then
-                local elements = {}
-                table.insert(elements, { label = "Handcuff", value = "handcuff" })
-                table.insert(elements, { label = "UnHandcuff", value = "unarrest" })
-                table.insert(elements, { label = "See licenses", value = "licenses" })
-                table.insert(elements, { label = "Escort", value = "escort" })
-                table.insert(elements, { label = "Search", value = "search" })
-                table.insert(elements, { label = "Put inside the vehicle", value = "vehiclein" })
-                table.insert(elements, { label = "Get out from the vehicle", value = "vehicleout" })
+RegisterCommand('openmenugangs', function()
+    if isgang(PlayerData.job.name) then
+        local ped = PlayerPedId()
 
-                ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'get_missions', {
-                title = ('' .. PlayerData.job.name .. ' actions'),
-                align = 'top-right',
-                elements = elements
-                }, function(data, menu)
-                local v = data.current.value
-                local player, distance = ESX.Game.GetClosestPlayer()
-                if v == 'handcuff' then
-                    local playerheading = GetEntityHeading(GetPlayerPed(-1))
-                    local playerlocation = GetEntityForwardVector(PlayerPedId())
-                    local playerCoords = GetEntityCoords(GetPlayerPed(-1))
-                    if distance < 3 then
-                        TriggerServerEvent('esx_policejob:requestarrest', GetPlayerServerId(player), playerheading, playerCoords, playerlocation)
-                    end
-                elseif v == 'unarrest' then
-                    local target, distance = ESX.Game.GetClosestPlayer()
-                    playerheading = GetEntityHeading(GetPlayerPed(-1))
-                    playerlocation = GetEntityForwardVector(PlayerPedId())
-                    playerCoords = GetEntityCoords(GetPlayerPed(-1))
-                    local target_id = GetPlayerServerId(target)
-                    if distance <= 2.0 then
-                    TriggerServerEvent('esx_policejob:requestrelease', target_id, playerheading, playerCoords, playerlocation)
-                    else
-                        ESX.ShowNotification('No estás lo suficientemente cerca')
-                    end
-                elseif v == 'search' then
-                    print("test")
-                    if distance < 3 then
-                        OpenBodySearchMenu(player)
-                    else
-                        ESX.ShowNotification('No players near')
-                    end
-                elseif v == "vehiclein" then
-                    if distance < 3 then
-                        TriggerServerEvent('guille_gangs:putinvehicle', GetPlayerServerId(player))
-                    end
-                elseif v == "vehicleout" then
-                    if distance < 3 then
-                        TriggerServerEvent('guille_gangs:outfromveh', GetPlayerServerId(player))
-                    end
-                elseif v == "escort" then
-                    if distance < 3 then
-                        TriggerServerEvent('guille_gangs:escort', GetPlayerServerId(player))
-                    end
-                elseif v == "licenses" then
-                    if distance < 3 then
-                        OpenIdentityCardMenu(player)
-                    end
-                end
-                end, function(data, menu)
-                menu.close()
-                end)
+        local elements = {}
+        table.insert(elements, { label = "Handcuff", value = "handcuff" })
+        table.insert(elements, { label = "UnHandcuff", value = "unarrest" })
+        table.insert(elements, { label = "See licenses", value = "licenses" })
+        table.insert(elements, { label = "Escort", value = "escort" })
+        table.insert(elements, { label = "Search", value = "search" })
+        table.insert(elements, { label = "Put inside the vehicle", value = "vehiclein" })
+        table.insert(elements, { label = "Get out from the vehicle", value = "vehicleout" })
+
+        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'get_missions', {
+        title = ('' .. PlayerData.job.name .. ' actions'),
+        align = 'top-right',
+        elements = elements
+        }, function(data, menu)
+        local v = data.current.value
+        local player, distance = ESX.Game.GetClosestPlayer()
+        if v == 'handcuff' then
+            local playerheading = GetEntityHeading(ped)
+            local playerlocation = GetEntityForwardVector(PlayerPedId())
+            local playerCoords = GetEntityCoords(ped)
+            if distance < 3 then
+                TriggerServerEvent('esx_policejob:requestarrest', GetPlayerServerId(player), playerheading, playerCoords, playerlocation)
+            end
+        elseif v == 'unarrest' then
+            local target, distance = ESX.Game.GetClosestPlayer()
+            playerheading = GetEntityHeading(ped)
+            playerlocation = GetEntityForwardVector(PlayerPedId())
+            playerCoords = GetEntityCoords(ped)
+            local target_id = GetPlayerServerId(target)
+            if distance <= 2.0 then
+            TriggerServerEvent('esx_policejob:requestrelease', target_id, playerheading, playerCoords, playerlocation)
+            else
+                ESX.ShowNotification('No estás lo suficientemente cerca')
+            end
+        elseif v == 'search' then
+            if distance < 3 then
+                OpenBodySearchMenu(player)
+            else
+                ESX.ShowNotification('No players near')
+            end
+        elseif v == "vehiclein" then
+            if distance < 3 then
+                TriggerServerEvent('guille_gangs:putinvehicle', GetPlayerServerId(player))
+            end
+        elseif v == "vehicleout" then
+            if distance < 3 then
+                TriggerServerEvent('guille_gangs:outfromveh', GetPlayerServerId(player))
+            end
+        elseif v == "escort" then
+            if distance < 3 then
+                TriggerServerEvent('guille_gangs:escort', GetPlayerServerId(player))
+            end
+        elseif v == "licenses" then
+            if distance < 3 then
+                OpenIdentityCardMenu(player)
             end
         end
+        end, function(data, menu)
+        menu.close()
+        end)
     end
-end)
+end, false)
+
+RegisterKeyMapping('openmenugangs', ('GangMenu'), 'keyboard', 'F6')
 
 
-
-function OpenBodySearchMenu(player)
-    print("test")
+OpenBodySearchMenu = function(player)
 	ESX.TriggerServerCallback('esx_policejob:getOtherPlayerData', function(data)
 		local elements = {}
 
@@ -395,18 +368,17 @@ end
 
 RegisterNetEvent('guille_gans:outfromv')
 AddEventHandler('guille_gans:outfromv', function(target)
-    local ped = GetPlayerPed(target)
-    local iped = GetPlayerPed(-1)
-    ClearPedTasks(ped)
-    plyPos = GetEntityCoords(iped,  true)
+    local targetped = GetPlayerPed(target)
+    local myped = PlayerPedId()
+    ClearPedTasks(targetped)
+    plyPos = GetEntityCoords(myped,  true)
     local xnew = plyPos.x+2
     local ynew = plyPos.y+2
-    SetEntityCoords(iped, xnew, ynew, plyPos.z)
+    SetEntityCoords(myped, xnew, ynew, plyPos.z)
 end)
 
-function OpenIdentityCardMenu(player)
+OpenIdentityCardMenu = function(player)
 	ESX.TriggerServerCallback('guille_gangs:getOtherPlayerData', function(data)
-        print(data)
 		local elements = {
 			{label = ('name:' ..data.name)},
 			{label = ('job' .. ('%s - %s'):format(data.job, data.grade) .. '')}
@@ -444,7 +416,7 @@ function OpenIdentityCardMenu(player)
 	end, GetPlayerServerId(player))
 end
 
-function OpenPutStocksMenu()
+OpenPutStocksMenu = function()
 
 	ESX.TriggerServerCallback('guille_gangs:getPlayerInventory', function(inventory)
 		local elements = {}
@@ -511,7 +483,7 @@ function OpenPutStocksMenu()
 	end)
 end
 
-function OpenGetStockMenu()
+OpenGetStockMenu = function()
     
 	ESX.TriggerServerCallback('guille_gangs:getStockItems', function(items)
 		local elements = {}
@@ -557,7 +529,7 @@ function OpenGetStockMenu()
 	end)
 end
 
-function Storage()
+Storage = function()
     TriggerServerEvent('guille_gangs:sendlog', 'stock')
     local elements = {}
     table.insert(elements, { label = "Put Items", value = "put" })
@@ -580,13 +552,12 @@ function Storage()
 end
 
 
-function Weapons()
+Weapons = function()
     TriggerServerEvent('guille_gangs:sendlog', 'weapons')
 	ESX.TriggerServerCallback('guille_gangs:getWeapons', function(weapons)
 		local elements = {}
 
 		for i=1, #weapons, 1 do
-            --print(weapons[i].name)
             table.insert(elements, {
                 label = ESX.GetWeaponLabel(weapons[i].name),
                 value = weapons[i].name,
