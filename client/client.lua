@@ -1,4 +1,4 @@
--- Guille_Gangs Optimized by VisiBait -> https://github.com/visibait. Original author: guillerp8 -> https://github.com/guillerp8
+-- Guille_Gangs Optimized by VisiBait
 
 local PlayerData = {}
 
