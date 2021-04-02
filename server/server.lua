@@ -175,7 +175,6 @@ ESX.RegisterServerCallback('guille_gangs:getWeapons', function(source, cb)
     local gang = xPlayer.job.name
 	TriggerEvent('esx_datastore:getSharedDataStore', 'society_'.. gang .. '', function(store)
 		local weapons = store.get('weapons')
-        print(store)
 		if weapons == nil then
 			weapons = {}
 		end
