@@ -271,7 +271,6 @@ ESX.RegisterServerCallback('guille_gangs:removeweapon', function(source, cb, wea
         local storeWeapons = store.get('weapons') or {}
         local ammo = nil
         for i=1, #storeWeapons, 1 do
-            print(xPlayer.canCarryItem(weaponName, 1))
             
             if storeWeapons[i].name == weaponName  then
                 weaponName = storeWeapons[i].name
