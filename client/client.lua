@@ -37,6 +37,7 @@ Citizen.CreateThread(function()
         local job
         local ped = PlayerPedId()
         local sleep = true
+	local pedCoords = GetEntityCoords(ped)
 
         for _,v in pairs(Config.Gangs) do
             if PlayerData.job ~= nil and PlayerData.job.name == v.Job then
@@ -46,7 +47,7 @@ Citizen.CreateThread(function()
         end
 
         for _,v in pairs(points) do
-            local coords = GetDistanceBetweenCoords(GetEntityCoords(ped), v.coords.x, v.coords.y, v.coords.z, true) 
+            local coords = Vdist(pedCoords, v.coords.x, v.coords.y, v.coords.z) 
             if (coords < 13) then
                 sleep = false
                 if PlayerData.job.name == job then
